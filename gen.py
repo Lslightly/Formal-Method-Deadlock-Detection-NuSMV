@@ -1,5 +1,4 @@
 from collections import defaultdict
-import os
 import queue
 import sys
 from typing import Dict, List, Set
@@ -230,6 +229,8 @@ def genProcess():
     for node in node_list:
         dest: Node
         for dest in node.ok_set.keys():
+            if dest.get_id() not in M:
+                continue
             out_chan: Channel
             for out_chan in node.ok_set[dest]:
                 in_chan: Channel

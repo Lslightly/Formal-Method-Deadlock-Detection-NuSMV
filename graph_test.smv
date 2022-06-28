@@ -1,0 +1,69 @@
+MODULE main
+VAR
+	c1_2: 0..4;
+	c2_3: 0..4;
+	c3_4: 0..4;
+	c4_1: 0..4;
+INIT
+	c1_2 = 0 & c2_3 = 0 & c3_4 = 0 & c4_1 = 0 
+TRANS
+(case c1_2 = 0: next(c1_2) = 2;
+	TRUE: next(c1_2) = c1_2;
+esac) & next(c2_3)=c2_3 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c1_2 = 0: next(c1_2) = 3;
+	TRUE: next(c1_2) = c1_2;
+esac) & next(c2_3)=c2_3 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c2_3 = 0: next(c2_3) = 3;
+	TRUE: next(c2_3) = c2_3;
+esac) & next(c1_2)=c1_2 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c2_3 = 0: next(c2_3) = 1;
+	TRUE: next(c2_3) = c2_3;
+esac) & next(c1_2)=c1_2 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c3_4 = 0: next(c3_4) = 1;
+	TRUE: next(c3_4) = c3_4;
+esac) & next(c1_2)=c1_2 & next(c2_3)=c2_3 & next(c4_1)=c4_1 |
+(case c3_4 = 0: next(c3_4) = 2;
+	TRUE: next(c3_4) = c3_4;
+esac) & next(c1_2)=c1_2 & next(c2_3)=c2_3 & next(c4_1)=c4_1 |
+(case c4_1 = 1: next(c4_1) = 0;
+	TRUE: next(c4_1) = c4_1;
+esac) & next(c1_2)=c1_2 & next(c2_3)=c2_3 & next(c3_4)=c3_4 |
+(case c1_2 = 2: next(c1_2) = 0;
+	TRUE: next(c1_2) = c1_2;
+esac) & next(c2_3)=c2_3 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c2_3 = 3: next(c2_3) = 0;
+	TRUE: next(c2_3) = c2_3;
+esac) & next(c1_2)=c1_2 & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c4_1 = 2 & c1_2 = 0: next(c4_1)=0 & next(c1_2)=2 ;
+	TRUE: next(c4_1)=c4_1 & next(c1_2)=c1_2 ;
+esac) & next(c2_3)=c2_3 & next(c3_4)=c3_4 |
+(case c4_1 = 3 & c1_2 = 0: next(c4_1)=0 & next(c1_2)=3 ;
+	TRUE: next(c4_1)=c4_1 & next(c1_2)=c1_2 ;
+esac) & next(c2_3)=c2_3 & next(c3_4)=c3_4 |
+(case c1_2 = 3 & c2_3 = 0: next(c1_2)=0 & next(c2_3)=3 ;
+	TRUE: next(c1_2)=c1_2 & next(c2_3)=c2_3 ;
+esac) & next(c3_4)=c3_4 & next(c4_1)=c4_1 |
+(case c2_3 = 1 & c3_4 = 0: next(c2_3)=0 & next(c3_4)=1 ;
+	TRUE: next(c2_3)=c2_3 & next(c3_4)=c3_4 ;
+esac) & next(c1_2)=c1_2 & next(c4_1)=c4_1 |
+(case c3_4 = 1 & c4_1 = 0: next(c3_4)=0 & next(c4_1)=1 ;
+	TRUE: next(c3_4)=c3_4 & next(c4_1)=c4_1 ;
+esac) & next(c1_2)=c1_2 & next(c2_3)=c2_3 |
+(case c3_4 = 2 & c4_1 = 0: next(c3_4)=0 & next(c4_1)=2 ;
+	TRUE: next(c3_4)=c3_4 & next(c4_1)=c4_1 ;
+esac) & next(c1_2)=c1_2 & next(c2_3)=c2_3 
+
+CTLSPEC !EF!(
+	(c1_2 = 0) |
+	(c2_3 = 0) |
+	(c3_4 = 0) |
+	(c4_1 = 1) |
+	(c1_2 = 2) |
+	(c2_3 = 3) |
+	(c4_1 = 2 & c1_2 = 0) |
+	(c4_1 = 3 & c1_2 = 0) |
+	(c1_2 = 3 & c2_3 = 0) |
+	(c2_3 = 1 & c3_4 = 0) |
+	(c3_4 = 1 & c4_1 = 0) |
+	(c3_4 = 2 & c4_1 = 0) 
+)
