@@ -1,0 +1,90 @@
+MODULE main
+  VAR
+    c1: 0..4;
+    c2: 0..4;
+    c3: 0..4;
+    c4: 0..4;
+  INIT
+    c1 = 0 & c2 = 0 & c3 = 0 & c4 = 0
+TRANS
+case c1 = 0: next(c1) = 2;
+	TRUE: next(c1) = c1;
+esac &
+case c1 = 0: next(c1) = 3;
+	TRUE: next(c1) = c1;
+esac &
+case c1 = 0: next(c1) = 4;
+	TRUE: next(c1) = c1;
+esac &
+case c2 = 0: next(c2) = 1;
+	TRUE: next(c2) = c2;
+esac &
+case c2 = 0: next(c2) = 3;
+	TRUE: next(c2) = c2;
+esac &
+case c2 = 0: next(c2) = 4;
+	TRUE: next(c2) = c2;
+esac &
+case c3 = 0: next(c3) = 1;
+	TRUE: next(c3) = c3;
+esac &
+case c3 = 0: next(c3) = 2;
+	TRUE: next(c3) = c3;
+esac &
+case c3 = 0: next(c3) = 4;
+	TRUE: next(c3) = c3;
+esac &
+case c1 = 2: next(c1) = 0;
+	TRUE: next(c1) = c1;
+esac &
+case c2 = 3: next(c2) = 0;
+	TRUE: next(c2) = c2;
+esac &
+case c3 = 4: next(c3) = 0;
+	TRUE: next(c3) = c3;
+esac &
+case c4 = 1: next(c4) = 0;
+	TRUE: next(c4) = c4;
+esac &
+case c1 = 3 & c2 = 0: next(c1) = 0 & next(c2) = 3;
+	TRUE: next(c1) = 3 & next(c2) = 0;
+esac &
+case c1 = 4 & c2 = 0: next(c1) = 0 & next(c2) = 4;
+	TRUE: next(c1) = 4 & next(c2) = 0;
+esac &
+case c2 = 1 & c3 = 0: next(c2) = 0 & next(c3) = 1;
+	TRUE: next(c2) = 1 & next(c3) = 0;
+esac &
+case c2 = 4 & c3 = 0: next(c2) = 0 & next(c3) = 4;
+	TRUE: next(c2) = 4 & next(c3) = 0;
+esac &
+case c3 = 1 & c4 = 0: next(c3) = 0 & next(c4) = 1;
+	TRUE: next(c3) = 1 & next(c4) = 0;
+esac &
+case c3 = 2 & c4 = 0: next(c3) = 0 & next(c4) = 2;
+	TRUE: next(c3) = 2 & next(c4) = 0;
+esac &
+case c4 = 2 & c1 = 0: next(c4) = 0 & next(c1) = 2;
+	TRUE: next(c4) = 2 & next(c1) = 0;
+esac &
+case c4 = 3 & c1 = 0: next(c4) = 0 & next(c1) = 3;
+	TRUE: next(c4) = 3 & next(c1) = 0;
+esac 
+
+CTLSPEC !EF!(
+	(c3 = 2 & c4 = 0) |
+	(c1 = 0) |
+	(c2 = 0) |
+	(c3 = 1 & c4 = 0) |
+	(c3 = 4) |
+	(c3 = 0) |
+	(c1 = 4 & c2 = 0) |
+	(c4 = 3 & c1 = 0) |
+	(c1 = 3 & c2 = 0) |
+	(c2 = 4 & c3 = 0) |
+	(c4 = 1) |
+	(c4 = 2 & c1 = 0) |
+	(c2 = 1 & c3 = 0) |
+	(c2 = 3) |
+	(c1 = 2) 
+)

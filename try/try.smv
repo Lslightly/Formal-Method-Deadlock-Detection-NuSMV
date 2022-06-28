@@ -1,0 +1,67 @@
+MODULE main
+  VAR
+    c1: 0..4;
+    c2: 0..4;
+    c3: 0..4;
+    c4: 0..4;
+    s12: process send(c1, 2);
+    s13: process send(c1, 3);
+    s14: process send(c1, 4);
+    s23: process send(c2, 3);
+    s24: process send(c2, 4);
+    s21: process send(c2, 1);
+    s34: process send(c3, 4);
+    s31: process send(c3, 1);
+    s32: process send(c3, 2);
+    r12: process receive(c1, 2);
+    r23: process receive(c2, 3);
+    r34: process receive(c3, 4);
+    r41: process receive(c4, 1);  
+    p412: process prc(c4, c1, 1, 2);
+    p413: process prc(c4, c1, 1, 3);
+    p123: process prc(c1, c2, 2, 3);
+    p124: process prc(c1, c2, 2, 4);
+    p234: process prc(c2, c3, 3, 4);
+    p231: process prc(c2, c3, 3, 1);
+    p341: process prc(c3, c4, 4, 1);
+    p342: process prc(c3, c4, 4, 2);
+  INIT
+    c1 = 0 & c2 = 0 & c3 = 0 & c4 = 0
+  CTLSPEC !EF!(
+    c1 = 0 | c2 = 0 | c3 = 0 |
+    c1 = 2 | c2 = 3 | c3 = 4 | c4 = 1 |
+    (c4 = 2 & c4 != 1 & c1 = 0) |
+    (c4 = 3 & c4 != 1 & c1 = 0) |
+    (c1 = 3 & c1 != 2 & c2 = 0) |
+    (c1 = 4 & c1 != 2 & c2 = 0) |
+    (c2 = 4 & c2 != 3 & c3 = 0) |
+    (c2 = 1 & c2 != 3 & c3 = 0) |
+    (c3 = 1 & c3 != 4 & c4 = 0) |
+    (c3 = 2 & c3 != 4 & c4 = 0) 
+  )
+
+
+MODULE receive(c, n)
+  ASSIGN
+    next(c) :=
+    case
+      c = n: {0};
+      TRUE: {c};
+    esac;
+	FAIRNESS running
+
+MODULE send(c, n)
+  ASSIGN
+    next(c) :=
+    case
+      c = 0: {n};
+      TRUE: {c};
+    esac;
+	FAIRNESS running
+
+MODULE prc(c, cp, n, m)
+  TRANS
+    case c = m & c != n & cp = 0: next(c) = 0 & next(cp) = m;
+      TRUE: next(c) = m & next(cp) = 0;
+    esac
+	FAIRNESS running

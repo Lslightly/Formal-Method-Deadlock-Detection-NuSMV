@@ -1,0 +1,129 @@
+MODULE main
+    VAR
+        c2 : {0, 4, 6};
+        c3 : {0, 4, 6};
+        c6 : {0, 2, 4};
+        c15 : {0, 2};
+        c17 : {0, 2};
+        c18 : {0, 2, 6};
+        c20 : {0, 4};
+        c21 : {0, 2, 4};
+        c23 : {0, 2};
+        node2: process node_1in1out_main(2, c17, c2, {4, 6});
+        node3: process node_3(c2, c20, c3);
+        node4: process node_1in1out_main(4, c3, c18, {2, 6});
+        node6: process node_1in1out_main(6, c18, c6, {2, 4});
+        node7: process node_1in1out(c6, c21);
+        node15: process node_1in1out(c23, c15);
+        node16: process node_1in1out(c15, c17);
+        node17: process node_17(c21, c20, c23);
+
+    ASSIGN
+        init(c2) := 0;
+        init(c3) := 0;
+        init(c6) := 0;
+        init(c15) := 0;
+        init(c17) := 0;
+        init(c18) := 0;
+        init(c20) := 0;
+        init(c21) := 0;
+        init(c23) := 0;
+    
+    CTLSPEC
+        AG(!(
+            c2 != 0 & c17 != 2 &    -- node 2
+            c3 != 0 &               -- node 3
+            c18 != 0 & c3 != 4 &    -- node 4
+            c6 != 0 & c18 != 6 &    -- node 6
+            c21 != 0 &              -- node 7
+            ((c21 = 4 & c20 != 0) | (c21 = 2 & c23 != 0)) & -- node 17
+            (c15 != 0 | (c15 = 0 & c23 = 0)) &              -- node 15
+            (c17 != 0 | (c17 = 0 & c15 = 0))                -- node 16
+        ))
+
+-- 1入度1出度的普通节点
+MODULE node_1in1out(in_c, out_c)
+    FAIRNESS running
+    ASSIGN
+        next(in_c) :=
+            case
+                (in_c != 0 & out_c = 0) : 0;
+                TRUE : in_c;
+            esac;
+        next(out_c) :=
+            case
+                (in_c != 0 & out_c = 0) : in_c;
+                TRUE : out_c;
+            esac;
+
+-- 1入度1出度的主节点
+MODULE node_1in1out_main(id, in_c, out_c, target_nodes)
+    FAIRNESS running
+    VAR
+        st : {s, p};
+    ASSIGN
+        init(st) := {s, p};
+        next(st) := {s, p};
+        next(in_c) :=
+            case
+                (st = p & in_c != 0 & out_c = 0) : 0;
+                TRUE : in_c;
+            esac;
+        next(out_c) :=
+            case
+                (out_c = 0 & st = s) : target_nodes;
+                (in_c != 0 & in_c = id) : out_c;
+                (in_c != 0 & in_c != id & out_c = 0 & st = p) : in_c;
+                TRUE : out_c;
+            esac;
+
+-- node 3
+MODULE node_3(c2, c20, c3)
+    FAIRNESS running
+    VAR
+        st : {from2to3, from20to3};
+    ASSIGN
+        init(st) := {from2to3, from20to3};
+        next(st) := {from2to3, from20to3};
+        next(c2) :=
+            case
+                (c2 != 0 & c20 = 4 & st = from2to3) : 0;
+                (c2 != 0 & c20 = 4 & st = from20to3) : c2;
+                (c2 != 0 & c20 = 0) : 0;
+                TRUE : c2;
+            esac;
+        next(c20) :=
+            case
+                (c2 != 0 & c20 = 4 & st = from2to3) : c20;
+                (c2 != 0 & c20 = 4 & st = from20to3) : 0;
+                (c2 = 0 & c20 != 0) : 0;
+                TRUE : c20;
+            esac;
+        next(c3) :=
+            case
+                (c2 != 0 & c20 = 4 & st = from2to3) : c2;
+                (c2 != 0 & c20 = 4 & st = from20to3) : 4;
+                (c2 != 0 & c20 = 0) : c2;
+                (c2 = 0 & c20 != 0) : 4;
+                TRUE : c3;
+            esac;
+
+-- node 17
+MODULE node_17(c21, c20, c23)
+    FAIRNESS running
+    ASSIGN
+        next(c23) :=
+            case
+                (c21 = 2 & c23 = 0) : 2;
+                TRUE : c23;
+            esac;
+        next(c20) :=
+            case
+                (c21 = 4 & c20 = 0) : 4;
+                TRUE : c20;
+            esac;
+        next(c21) :=
+            case
+                ((c21 = 2 & c23 = 0) | (c21 = 4 & c20 = 0)) : 0;
+                TRUE : c21;
+            esac;
