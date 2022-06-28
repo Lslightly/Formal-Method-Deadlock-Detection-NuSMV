@@ -1,9 +1,9 @@
 from collections import defaultdict
+import os
 import queue
+import sys
 from typing import Dict, List, Set
 
-node_id_list = [i for i in range(1, 18)]
-M = [2, 4, 6]
 node_list = []
 edge_list = []
 
@@ -137,7 +137,13 @@ def init_node_list():
         node.add_to_list()
 
 def read_graph(file):
+    global M, node_id_list
     with open(file, 'r') as f:
+        N = int(f.readline())
+        node_id_list = [i for i in range(1, N+1)]
+        M = f.readline()
+        M = [int(m) for m in M.split()]
+        init_node_list()
         for line in f.readlines():
             in_id, out_id = line.split(' ')
             in_id, out_id = int(in_id), int(out_id)
@@ -188,16 +194,18 @@ def integrateChangeList(change_list):
     return out
 
 def genSend():
-    print('genSend')
+    # print('genSend')
     out = ''
     for m in M:
         src: Node = node_list[m-1]
         dest: Node
         for dest in src.ok_set.keys():
-            print(src.get_id(), dest.get_id())
+            if dest.get_id() not in M:
+                continue
             ok_channels = src.ok_set[dest]
             ok_channel: Channel
             for ok_channel in ok_channels:
+                # print(src.get_id(), dest.get_id(), ok_channel.get_name())
                 send_stat = '(case {case_cond}: next({chan}) = {dest_id};\n\tTRUE: next({chan}) = {chan};\nesac) ' + get_P([ok_channel])
                 case_cond = '{} = 0'.format(ok_channel.get_name())
                 CTLSPEC.append(case_cond)
@@ -206,8 +214,8 @@ def genSend():
 
 def genRecv():
     out = ''
-    node: Node
-    for node in node_list:
+    for m in M:
+        node: Node = node_list[m-1]
         in_chan: Channel
         for in_chan in node.in_e_list:
             recv_stat = '(case {case_cond}: next({chan}) = 0;\n\tTRUE: next({chan}) = {chan};\nesac) ' + get_P([in_chan])
@@ -249,10 +257,13 @@ def genTransSpec():
     return out
 
 if __name__ == '__main__':
-    init_node_list()
-    read_graph('graph.txt')
-    print('edge num:', len(edge_list))
+    read_graph(sys.argv[1])
+    if len(sys.argv) <= 2:
+        outfile = 'gen.smv'
+    else:
+        outfile = sys.argv[2]
+    # print('edge num:', len(edge_list))
     out = genModuleVarInit()
     out += genTransSpec()
-    with open('gen.smv', 'w') as f:
+    with open(outfile, 'w') as f:
         f.write(out)

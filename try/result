@@ -1,0 +1,107 @@
+*** This is NuSMV 2.6.0 (compiled on Wed Oct 14 15:37:51 2015)
+*** Enabled addons are: compass
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@list.fbk.eu>.
+*** Please report bugs to <Please report bugs to <nusmv-users@fbk.eu>>
+
+*** Copyright (c) 2010-2014, Fondazione Bruno Kessler
+
+*** This version of NuSMV is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This version of NuSMV is linked to the MiniSat SAT solver. 
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+WARNING *** The model contains PROCESSes or ISAs. ***
+WARNING *** The HRC hierarchy will not be usable. ***
+-- specification AG !((((((((((c2 != 0 & c17 != 2) & c3 != 0) & c18 != 0) & c3 != 4) & c6 != 0) & c18 != 6) & c21 != 0) & ((c21 = 4 & c20 != 0) | (c21 = 2 & c23 != 0))) & (c15 != 0 | (c15 = 0 & c23 = 0))) & (c17 != 0 | (c17 = 0 & c15 = 0)))  is false
+-- as demonstrated by the following execution sequence
+Trace Description: CTL Counterexample 
+Trace Type: Counterexample 
+  -> State: 1.1 <-
+    c2 = 0
+    c3 = 0
+    c6 = 0
+    c15 = 0
+    c17 = 0
+    c18 = 0
+    c20 = 0
+    c21 = 0
+    c23 = 0
+    node2.st = s
+    node3.st = from2to3
+    node4.st = s
+    node6.st = s
+  -> Input: 1.2 <-
+    _process_selector_ = node2
+    running = FALSE
+    node17.running = FALSE
+    node16.running = FALSE
+    node15.running = FALSE
+    node7.running = FALSE
+    node6.running = FALSE
+    node4.running = FALSE
+    node3.running = FALSE
+    node2.running = TRUE
+  -> State: 1.2 <-
+    c2 = 6
+  -> Input: 1.3 <-
+    _process_selector_ = node3
+    node3.running = TRUE
+    node2.running = FALSE
+  -> State: 1.3 <-
+    c2 = 0
+    c3 = 6
+  -> Input: 1.4 <-
+    _process_selector_ = node2
+    node3.running = FALSE
+    node2.running = TRUE
+  -> State: 1.4 <-
+    c2 = 4
+  -> Input: 1.5 <-
+    _process_selector_ = node6
+    node6.running = TRUE
+    node2.running = FALSE
+  -> State: 1.5 <-
+    c6 = 4
+  -> Input: 1.6 <-
+    _process_selector_ = node7
+    node7.running = TRUE
+    node6.running = FALSE
+  -> State: 1.6 <-
+    c6 = 0
+    c21 = 4
+  -> Input: 1.7 <-
+    _process_selector_ = node6
+    node7.running = FALSE
+    node6.running = TRUE
+  -> State: 1.7 <-
+    c6 = 4
+  -> Input: 1.8 <-
+    _process_selector_ = node17
+    node17.running = TRUE
+    node6.running = FALSE
+  -> State: 1.8 <-
+    c20 = 4
+    c21 = 0
+  -> Input: 1.9 <-
+    _process_selector_ = node7
+    node17.running = FALSE
+    node7.running = TRUE
+  -> State: 1.9 <-
+    c6 = 0
+    c21 = 4
+  -> Input: 1.10 <-
+    _process_selector_ = node6
+    node7.running = FALSE
+    node6.running = TRUE
+  -> State: 1.10 <-
+    c6 = 2
+  -> Input: 1.11 <-
+    _process_selector_ = node4
+    node6.running = FALSE
+    node4.running = TRUE
+  -> State: 1.11 <-
+    c18 = 2
